@@ -1,0 +1,60 @@
+﻿@model IEnumerable<project5_voting.Models.localList>
+
+@{
+    ViewBag.Title = "قائمة الطلبات الإدارية";
+    Layout = "~/Views/Shared/_LayoutPage1.cshtml";
+}
+
+<h2 class="text-center mb-4">طلبات الترشح للقوائم المحلية</h2>
+
+<div class="container mt-5">
+    <div class="card border-0 shadow-lg">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped text-right">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th class="text-primary">اسم القائمة</th>
+                            <th class="text-primary">دائره الانتخابية</th>
+                            <th class="text-primary">الحالة</th>
+                            <th class="text-primary">الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.listName)</td>
+                                <td>@Html.DisplayFor(modelItem => item.electionDistrict)</td>
+                                <td>
+                                    @using (Html.BeginForm("UpdateStatus", "localCandidates", FormMethod.Post, new { id = item.id }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <div class="form-group mb-0">
+                                            @Html.Hidden("id", item.id)
+                                            <select name="status" class="form-control form-control-sm rounded-pill">
+                                                <option value="1" @(item.status == "1" ? "selected" : "")>مقبول</option>
+                                                <option value="0" @(item.status == "0" ? "selected" : "")>مرفوض</option>
+                                            </select>
+                                            <button type="submit" class="btn btn-gradient btn-sm rounded-pill mt-2">تحديد الحالة</button>
+                                        </div>
+                                    }
+                                </td>
+                                <td>
+                                    @Html.ActionLink("التفاصيل", "localCandidateAdmin", new { id = item.id }, new { @class = "btn btn-info btn-sm rounded-pill shadow" })
+
+                                    @using (Html.BeginForm("Delete", "localLists", FormMethod.Post, new { id = "delete-form-" + item.id }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        @Html.Hidden("id", item.id)
+                                        <button type="submit" class="btn btn-danger btn-sm rounded-pill shadow mt-2" onclick="return confirm('هل أنت متأكد أنك تريد حذف هذا العنصر؟')">حذف</button>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

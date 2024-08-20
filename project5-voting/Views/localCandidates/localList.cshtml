@@ -1,0 +1,152 @@
+﻿@model project5_voting.Models.localList
+
+
+@{
+    ViewBag.Title = "localList";
+}
+
+@*<h2 class="text-right mb-4">طلب الترشح للقوائم المحلية</h2>*@
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="container mt-5">
+        <div class="card border-0 shadow-lg">
+            <div class="card-body">
+                <h4 class="card-title text-right text-dark mb-4">تعبئة طلب الترشح</h4>
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="form-horizontal">
+                    <div class="form-group row mb-4">
+                        <label class="col-md-2 col-form-label text-right text-primary">اسم القائمة</label>
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.listName, new { htmlAttributes = new { @class = "form-control form-control-lg rounded-pill", placeholder = "الرجاء ادخال اسم القائمة" } })
+                            @Html.ValidationMessageFor(model => model.listName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group row mb-4">
+                        <label class="col-md-2 col-form-label text-right text-primary">اسم الدائرة</label>
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(
+                                     model => model.electionDistrict,
+                                     new SelectList(
+                                         new List<SelectListItem>
+                                         {
+                                        new SelectListItem { Value = "", Text = "اختر دائرة" },
+                                        new SelectListItem { Value = "Circle 1", Text = "اربد الاولى" },
+                                        new SelectListItem { Value = "Circle 2", Text = "اربد الثانية" },
+                                        new SelectListItem { Value = "Circle 3", Text = "المفرق" }
+                             },
+                                         "Value",
+                                         "Text"),
+                                     new { @class = "form-control form-control-lg rounded-pill", required = "required" }
+                                 )
+                            @Html.ValidationMessageFor(model => model.electionDistrict, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-10 offset-md-2">
+                            <button type="submit" class="btn btn-gradient btn-lg rounded-pill shadow">تقديم</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-3 text-center">
+        @Html.ActionLink("Back to List", "Index", new { @class = "btn btn-secondary btn-lg rounded-pill shadow" })
+    </div>
+
+}
+@{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // Add SweetAlert for validation messages or confirmation dialogs
+        @if (ViewBag.AlertMessage != null)
+        {
+            <text>
+            Swal.fire({
+                icon: 'error',
+                title: 'خطأ في التقديم',
+                text: '@ViewBag.AlertMessage',
+                confirmButtonText: 'موافق'
+            });
+            </text>
+        }
+    </script>
+}
+
+
+<style>
+    body {
+        direction: rtl;
+        background: linear-gradient(to right, #ece9e6, #ffffff);
+        font-family: 'Cairo', sans-serif;
+    }
+
+    h2 {
+        font-weight: bold;
+        color: #000;
+    }
+
+    .text-right {
+        text-align: right;
+    }
+
+    .form-horizontal .form-group {
+        text-align: right;
+    }
+
+    .form-group.row {
+        direction: rtl;
+    }
+
+    .card {
+        border-radius: 15px;
+        background: #ffffff;
+        padding: 30px;
+        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-control-lg {
+        border: 2px solid #198754;
+        padding: 15px;
+        font-size: 1.1rem;
+        color: #495057;
+    }
+
+    .btn-gradient {
+        background: linear-gradient(90deg, #fb2345 0%, #198754 100%);
+        color: white;
+        border: none;
+        padding: 10px 30px;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+    }
+
+
+
+    .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+    }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+    .text-primary {
+        --bs-text-opacity: 1;
+        color: #000 !important;
+    }
+
+    .shadow-lg {
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
+    }
+</style>
+
